@@ -43,20 +43,82 @@ the Lua manual (http://www.lua.org/manual/5.1/).
 
 == Buildpath ==
 
+It is a set of ''folder pathes'' which contains source and libraries
+enabling to run an application, there are several kind of them:
+* Project path
+* Runtime path
+
+=== Project path ===
+
+This path is used by Koneki LDT to find material helping writing code.
+Setting your project path accordingly will unleash the power of tooling
+with features such as ''code completion'' and ''code navigation''.
+
+At '''runtime''', your program is '''not aware''' of this path.
+
+(http://www.foo.org "Manage project paths")
+
+=== Runtime path ===
+
+This path describe the source and libraries available to your program
+at runtime. It is defined as
+(http://www.lua.org/manual/5.1/manual.html#pdf-LUA_PATH $LUA_PATH).
+
+(http://www.foo.org "Manage runtime paths")
+
 == Execution Environment ==
 
-An Execution Environment, which may also be referred to as EE, is file
-containing information about the environment where a Lua application
-could run. An environment is a set of libraries available to the
-application out of the box, as in Lua 5.1 or Corona SDK.
+An Execution Environment, which may also be referred to as ''EE'', is a file
+containing information about the environment where a Lua application is supposed
+to run. An ''environment'' is a set of libraries available to the application
+out of the box, as in ''Lua 5.1'' or ''Corona SDK''.
 
-The idea is to provide a file capable to describe elements of this
-environment. All provided information allows LDT to offer better code
-completion, code navigation and documentation layout in LDT.
+The idea is to provide a file which describe elements of an environment.
+Provided information allows LDT to offer better code completion, code navigation
+and documentation layout.
 
 == Interpreters ==
 
+In our case, an interpreter is a program  which executes the instructions of
+your program. The most used in the Lua world might be
+(http://www.lua.org/manual/5.1/manual.html#6 "Lua standalone interpreter").
+
 == Debug ==
+
+Debug is a common way to monitor how your program behave at runtime, step by
+step. You might be interested to do so when your application in not even running
+on your computer.
+
+===Local Debug===
+
+It is the typical case, you monitor a program running on your desktop.
+
+(http://www.foo.org "Debug a local application")
+
+===Attach Debug===
+
+You want to monitor a an application running in a specific context, this
+application is not launched from Koneki LDT. There is a solution for you. Your
+application can ''connect'' to the IDE at startup and be monitored.
+
+This way is called ''attached debug'', uses DBGp and is composed of two parties.
+
+(http://www.foo.org "Configure an attach debug session")
+
+====DBGp Client====
+
+In our case it is ''Koneki LDT'' waiting for an application to connect.
+
+====DBGp Server====
+
+In our case, it is the ''debugged application'' sending information about its
+run to ''Koneki LDT''.
+
+===Remote Debug===
+
+''Remote Debug'' enables to monitor an application running on a remote system,
+it rely on the same components as ''Attached Debug'' but automatize some
+configuration aspects.
 
 = Tasks =
 
@@ -297,4 +359,3 @@ If needed, you can change the server port, in ''Window > Preferences > Dynamic L
 The '''dynamic code''' is not supported, it means that any code that is loaded with <tt>load</tt>, <tt>loadstring</tt> will not be supported. The debugger will step over it just like a C function. 
 
 The debugger is officially supported for Lua VM 5.1. Any other implementation (Lua 5.2, LuaJIT, ...) is not guaranteed to work at this time.
-
