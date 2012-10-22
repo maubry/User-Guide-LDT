@@ -63,19 +63,30 @@ enabling to run an application, there are several kind of them:
 
 === Project path ===
 
-This path is used by Koneki LDT to find material helping writing code.
+This path is used by Koneki LDT to find sources, it is composed of the
+content of all the sources folders of your project. ''Source folder pathes'' of
+your poject will be appended to <code>$LUA_PATH</code> before running your
+project.
+
+So, you can require files from your source folder as modules. Lets say in a
+<code>src/</code> source path you a <code>foo.lua</code> file, you can write:
+    require 'foo'
+This logic applies to sub directories, with a <code>bar.lua</code> in folder
+<code>src/sub</code>, you can use:
+    require 'sub.bar'
+
+Project path is also used for helping you writing code.
 Setting your project path accordingly will unleash the power of tooling
 with features such as ''code completion'' and ''code navigation''.
-
-At '''runtime''', your program is '''not aware''' of this path.
 
 (http://www.foo.org "Manage project paths")
 
 === Runtime path ===
 
 This path describe the source and libraries available to your program
-at runtime. It is defined as
-(http://www.lua.org/manual/5.1/manual.html#pdf-LUA_PATH $LUA_PATH).
+at runtime. It is composed of 
+(http://www.lua.org/manual/5.1/manual.html#pdf-LUA_PATH $LUA_PATH) and each
+source parth of your project.
 
 (http://www.foo.org "Manage runtime paths")
 
