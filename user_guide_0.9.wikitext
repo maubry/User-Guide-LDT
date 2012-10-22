@@ -1,37 +1,50 @@
 =Overview=
-The LDT project provides plug-ins that implement a Lua IDE supporting the development of Lua scripts and applications.
-It adds a dedicated Lua perspective to the Eclipse Workbench, which, together with features such as syntax highlighting, scope-aware code completion, code folding, etc. allows to structure Lua application better (project-based organization), and boosts the productivity of Lua developers.
+
+The LDT project provides plug-ins that implement a Lua IDE supporting the
+development of Lua scripts and applications.
+It adds a dedicated Lua perspective to the Eclipse Workbench, which, together
+with features such as syntax highlighting, scope-aware code completion, code
+folding, etc. allows to structure Lua application better (project-based
+organization), and boosts the productivity of Lua developers.
 
 =Getting started=
 
 ==Create a project==
 
-For your code to be manipulated correctly by Lua Development Tools, it must be contained into an Eclipse project having a ''Lua'' flavour. In order to do this, you have to create a Lua Project, it will add '''Lua nature''' to your code.
+For your code to be manipulated correctly by Lua Development Tools, it must be
+contained into an Eclipse project having a ''Lua'' flavour. In order to do this,
+you have to create a Lua Project, it will add '''Lua nature''' to your code.
 
 In "File > New > Project...", select the right project type: '''Lua Project'''.
 
-[[Image:ProjectList.png|center]]
+[[Image:ProjectList0.9.png|center]]
 
 Enter a valid name, choose your Execution Environment, press "Finish", and voila!
 
-''Note:'' You might want to configure an [[Koneki/LDT/User_Guide#Execution_Environment|Execution Environment]].
+''Note:'' You might want to configure an
+[[Koneki/LDT/User_Guide#Execution_Environment|Execution Environment]].
 
-[[Image:NewLuaProject.png|center]]
+[[Image:NewLuaProject0.9.png|center]]
 
-==Edit a Lua source file==
+==Edit some Lua==
 
-Now that your project is created, you are ready to start working on your Lua scripts. 
-In every project, there is a default '''source folder''', named ''src''. You can edit the ''main.lua'' file in it.
+Now that your project is created, you are ready to start working on your Lua
+scripts. In every project, there is a default '''source folder''', named
+''src''. You can edit the ''main.lua'' file in it.
 
 [[Image:EditingFile.png|center]]
 
-'''Source folders''' are imported, as they are the one processed to compute tooling information.
-That is to say if you write a module outside of a source folder, it will not be part of the accessible scope when you will try to reference it from another module or script ; thus, its content will not be available in e.g. code completion.
+'''Source folders''' are important, as they are the ones processed for tooling
+information. That is to say, if you write a module outside of a source folder,
+it will not be part of the accessible scope when you will try to reference it
+from another module or script ; thus, its content will not be available in e.g.
+code completion.
 
-==Run a Lua script==
+==Run/Debug a Lua script==
 
-To run your Lua script, the file has to be contained in a Lua project and a default interpreter has to be created as explained in the [[Koneki/LDT/User_Guide#Interpreters|configure interpreters]] part.
-If it is the case, you can simply right click on the file add select ''Run As/Lua Application''.
+To run your Lua script, the file has to be contained in a Lua project.
+If it is the case, you can simply right click on the file add select
+''Run As/Lua Application''.
 [[Image:RunAs.png|center]]
 The ''Run As'' menu creates a default launch configuration for the selected file and launch it. 
 
