@@ -11,9 +11,7 @@
 	3.4 Debug
 	    3.4.5 Local Debug
 	    3.4.6 Attach debug
-            	3.2.1 DBGp Client
-            	3.2.2 DBGp Server
-	    3.4.1 Remote Debug	
+	    3.4.1 Remote Debug
     4 Tasks
 	4.1 Configuring builpath
             3.2.3.1 Project path
@@ -25,6 +23,8 @@
 	4.1 Configuring debug sessions
 	    4.1.1 Local session
 	    Attach session
+            	3.2.1 DBGp Client
+            	3.2.2 DBGp Server
 	    Remote session
 	4.2 Performing a Debug session
 	    4.1.1 Breakpoints, code navigation
