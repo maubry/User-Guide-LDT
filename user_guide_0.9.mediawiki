@@ -58,45 +58,37 @@ the Lua manual (http://www.lua.org/manual/5.1/).
 
 == Buildpath ==
 
-It is a set of ''folder pathes'' which contains source and libraries
-enabling to run an application, there are several kind of them:
-* Project path
-* Runtime path
+It is a set of ''folder paths'' which contains source and libraries accessible
+from your project. There are several kinds of them:
+* Project dependencies
+* Source folders
+* [Execution_Environments|Execution Environments]
 
-'''Source folders''' are important, as they are the ones processed for tooling
-information. That is to say, if you write a module outside of a source folder,
-it will not be part of the accessible scope when you will try to reference it
-from another module or script ; thus, its content will not be available in e.g.
-code completion.
+Some elements like ''source folders'' and ''project dependencies'' are used for
+''tooling'' and ''runtime'' purposes. Some others, are used only for ''tooling''
+purposes, such as [Execution_Environments|Execution Environments].
 
-=== Project path ===
+About ''runtime'' , source folders of ''current'' project and the ones of
+projects on which it depends will be appended to
+[http://www.lua.org/manual/5.1/manual.html#pdf-LUA_PATH|LUA_PATH] at runtime.
 
-This path is used by Koneki LDT to find sources, it is composed of the
-content of all the sources folders of your project. ''Source folder pathes'' of
-your poject will be appended to <code>$LUA_PATH</code> before running your
-project.
+About ''tooling'', all elements from buildpath are parsed to unleash the power
+of tooling with features such as ''code completion'' and ''code navigation''.
 
-So, you can require files from your source folder as modules. Lets say in a
+You can require files from your source folders as modules. Lets say in a
 <code>src/</code> source path you a <code>foo.lua</code> file, you can write:
     require 'foo'
 This logic applies to sub directories, with a <code>bar.lua</code> in folder
 <code>src/sub</code>, you can use:
     require 'sub.bar'
 
-Project path is also used for helping you writing code.
-Setting your project path accordingly will unleash the power of tooling
-with features such as ''code completion'' and ''code navigation''.
+'''Note''': ''Source folders'' are important, as they are processed for tooling
+information. That is to say, if you write a module
+'''outside of a source folder''' , it will '''not be accessible''' from another
+module or script; thus, its content will not be available in e.g.
+''code completion'' nor ''documentation''.
 
-(http://www.foo.org "Manage project paths")
-
-=== Runtime path ===
-
-This path describe the source and libraries available to your program at
-runtime, it is composed of 
-(http://www.lua.org/manual/5.1/manual.html#pdf-LUA_PATH $LUA_PATH) and each
-''source parth'' of your project.
-
-(http://www.foo.org "Manage runtime path")
+[http://www.foo.org|"Manage buildpaths"]
 
 == Execution Environment ==
 
