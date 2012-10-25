@@ -15,14 +15,7 @@ For your code to be manipulated correctly by Lua Development Tools, it must be
 contained into an Eclipse project having a ''Lua'' flavour. In order to do this,
 you have to create a Lua Project, it will add '''Lua nature''' to your code.
 
-In "File > New > Project...", select the right project type: '''Lua Project'''.
-
-[[Image:ProjectList0.9.png|center]]
-
-Enter a valid name, choose your Execution Environment, press "Finish", and voila!
-
-''Note:'' You might want to configure an
-[[Koneki/LDT/User_Guide#Execution_Environment|Execution Environment]].
+In ''File > New > Lua Project'', enter a valid name and voila!
 
 [[Image:NewLuaProject0.9.png|center]]
 
@@ -30,23 +23,32 @@ Enter a valid name, choose your Execution Environment, press "Finish", and voila
 
 Now that your project is created, you are ready to start working on your Lua
 scripts. In every project, there is a default '''source folder''', named
-''src''. You can edit the ''main.lua'' file in it.
+''src''. You can edit the ''main.lua'' file in it, notice that completion is
+already available for Lua built in functions.
 
-[[Image:EditingFile.png|center]]
+[[Image:EditingFile0.9.png|center]]
 
-'''Source folders''' are important, as they are the ones processed for tooling
-information. That is to say, if you write a module outside of a source folder,
-it will not be part of the accessible scope when you will try to reference it
-from another module or script ; thus, its content will not be available in e.g.
-code completion.
-
-==Run/Debug a Lua script==
+==Run a Lua script==
 
 To run your Lua script, the file has to be contained in a Lua project.
 If it is the case, you can simply right click on the file add select
 ''Run As/Lua Application''.
-[[Image:RunAs.png|center]]
-The ''Run As'' menu creates a default launch configuration for the selected file and launch it. 
+
+[[Image:RunAs0.9.png|center]]
+[[Image:Console0.9.png|center]]
+
+The ''Run As'' menu creates a default launch configuration for the selected file and launch it.
+
+[[Image:RunShortcut0.9.png|center]]
+
+==Debug a Lua script==
+
+Simply define a ''breakpoint'' and you are all set for debugging.
+Select your project in favorite debug sessions and your breakpoint should be hit.
+
+[[Image:ToggleBreakpoint0.9.png|center]]
+[[Image:DebugShortcut0.9.png|center]]
+[[Image:DebugPerspective0.9.png|center]]
 
 = Concepts =
 
@@ -60,6 +62,12 @@ It is a set of ''folder pathes'' which contains source and libraries
 enabling to run an application, there are several kind of them:
 * Project path
 * Runtime path
+
+'''Source folders''' are important, as they are the ones processed for tooling
+information. That is to say, if you write a module outside of a source folder,
+it will not be part of the accessible scope when you will try to reference it
+from another module or script ; thus, its content will not be available in e.g.
+code completion.
 
 === Project path ===
 
@@ -146,17 +154,39 @@ configuration aspects.
 
 = Tasks =
 
-==Configurig Project Path Build path==
+==Configurig Build paths==
 
-Project path is the one set using the right clic ''Build Path > Configure Build Path ...'' UI. From there you can
+In order to run propoperly your scripts, you
+'''must care about paths'''. In our case, there are several kind of them
+to consider:
+* Project path, used by the IDE to perform tooling, can be also called ''source path''
+* Runtime path, used to run the script
+
+===Project path===
+
+Project path is the one set using the
+'' Build Path > Configure Build Path ...'' UI. From there you can
 specify dependency to other project from current workspace. As a result,
-will enjoy completion and navigation between your project and the ones configured in Build Path.
+will enjoy completion and navigation between your project and the ones
+configured in Build Path.
+
 [[Image:BuildPath.png|center]]
+
+===Runtime paths===
+
+The runtime paths are composed of the system variables LUA_PATH, LUA_CPATH, LD_LIBRARY and LUA binary path in the PATH variable.
+Theses paths can be set on the target computer where the lua script will run.
+Theses paths can also set by the launch configurations on the process or target where the script will run.
+The runtime path is dependent on witch kind of launch configuration you use.
+The configuration of theses paths is not detailed here since
+it is highly dependent on how you are managing paths in your own
+environment.
 
 == Managing Execution Environments ==
 
 To find preferences related to ''EE'', go to
-''Window > Preferences > Lua > Execution Environments'' and you will have following interface.
+''Window > Preferences > Lua > Execution Environments'' and you will
+have following interface.
 
 [[Image:EePref.png|center]]
 
@@ -193,20 +223,23 @@ It is now linked to selected project.
 
 == Managing Interpreters ==
 
-Interpreters are used by LDT to run scripts on the local computers. 
+Interpreter are use by LDT to run scripts on the local computer. 
 
 === Embedded Interpreters ===
 
-An embedded interpreter is an interpreter delivered with LDT. You can recognize the interpreter preference page, the location is ''(embedded)''.
-Currently, LDT is delivered with the JNLua embedded interpreter, JNLua is Java implementation of Lua interpreter and APIs.
+An embedded interpreter is an interpreter deliver with LDT. You can reconize the interpreter preference page, the location is set as ''(embedded)''.
+Currently, LDT is deliver with the JNLua embedded interpreter, JNLua is Java implementation of Lua.
 
-=== Local Interpreters ===
+You can override an embedded interpreter by creating a new one with the same name.
 
-To run Lua scripts in LDT using the Lua Local Application launch configuration with an locally installed Lua interpreter, you have to configure a local interpreter.
+=== Local Interperters ===
+
+To run Lua scripts in LDT using the Lua Local Application launch configuration using a local installed Lua interpreters, you have to configure an interpreter.
 To configure an interpreter you just need the path of the interpreter executable, then you can set interpreter
 arguments and set some environment variables.
 
-See below how to reference a Lua interpreter installed on your machine, and use it in LDT.
+See below how to reference a Lua interpreter installed on your machine,
+and use it in LDT.
 
 To open the Interpreters preference page go to
 ''Window > Preferences > Lua > Interpreters'':
@@ -228,36 +261,27 @@ Once you press the ''Ok'' button, the created interpreter appears in the Interpr
 
 == Local session ==
 
-Create a Lua Application launch configuration in the ''Debug Configuration'' menu.
-[[Image:DebugConfiguration.png|center]]
+Create a Lua Application launch configuration in the debug configuration menu.
+[[Image:CreatedInterpreter.png|center]]
 
-In the ''Main'' tab, you can select the project, the script you want to launch and a Lua interpreter.
-[[Image:MainLocalLaunchConfig.png|center]]
+In the ''Main'' tab, you can select the project and the script you want to launch.
+[[Image:CreatedInterpreter.png|center]]
 
-In the ''Arguments'' tab, you can specify interpreter arguments and script arguments.
+In the ''Interpreter'' tab, you can select your own interpreter.
+[[Image:CreatedInterpreter.png|center]]
+
+In the "Arguments" tab, you can specify interpreter arguments and script arguments.
 The interperter arguments will be merged to the ones specified at the interpreter level (in the interpreter preference page) at runtime.
-[[Image:ArgumentsLocalLaunchConfig.png|center]]
-
-In the ''Environment'' tab, you can specify environment variable for runtime.
-Environment variable defined can be append 
-[[Image:ArgumentsLocalLaunchConfig.png|center]]
-
-In the ''Common'' tab, you can set some settings related to launch configurations:
-**Save current launch configuration in a specified file.
-**See in favorite menu the launch conf is displayed.
-**Change the encoding of the launch configuration file.
-**Allocate  sandard input/output in a console and/or redirect standard output in a file.
 
 == Attach session ==
 
-The Debugger of Lua Development Tools is based on the DBGp protocol, and the IDE implements a DBGp server. <br>
-To connect to this server, and begin remote/attach debugging, you need to use a [[Media:Debugger_lua.zip|DBGp Lua client]]. TODO verify download link 
+The Debugger of Lua Development Tools is based on the DBGp protocol, and the IDE implements a DBGp server.<br> To connect to this server, and begin remote/attach debugging, you need to use a [[Media:Debugger_lua.zip|DBGp Lua client]]. TODO verify links
 
-=== Launching DBGp Client  ===
+=== DBGp Client  ===
 
 The DBGp Lua client is composed of two Lua files and can be downloaded [https://hudson.eclipse.org/hudson/job/koneki-ldt/lastSuccessfulBuild/artifact/libraries/luadbgpclient/target/Debugger_lua.zip here].<br> It runs on Unix-like OS and Windows (XP and later). It is written in '''Lua 5.1''' and '''depends on lua-socket'''.<br> ''You can get Lua on http://www.lua.org/download.html and install lua-socket thanks to [http://luarocks.org/en/Download luarocks], or via your official OS repositories.''<br> 
 
-To use it, you must have these two files in your Lua path.<br> To begin the connection, you must execute this Lua code :
+To use it, you must have these two files in your Lua path.<br> To begin the connection, you must execute this Lua code&nbsp;: 
 
  > local initconnection = require("debugger")
  > initconnection(host, port, idekey)
@@ -291,7 +315,7 @@ The full line should look like that :
  <tt>lua -e "io.stdout:setvbuf('line'); require('debugger')();" MyApp.lua</tt>
 }}
 
-=== Setup DBGp Server  ===
+=== DBGp Server  ===
 
 The DBGp Server is integrated in LDT.<br> In order to accept incoming debug sessions, you must create a new '''Lua Attach to Application''' launch configuration, then launch it. 
 
@@ -299,11 +323,11 @@ Go in '''Run/Debug Configurations...'''.
 
 [[Image:LaunchConfiguration.png|center]]
 
-*'''Project''': Set the LDT project in your workspace which includes the Lua source file(s) of the application you want to debug. <br> 
-*'''IdeKey''': Default value is <tt>luaidekey</tt>, if you need to debug more than one application at the same time, you should change it to associate a launch configuration with only one application to debug.<br> 
-*'''Source Mapping''': Define a common way for DBGp Server (IDE) and DBGp Client (running application) to identify source file. There are several strategy, each more or less adapted to a specific used case. To better understand it, see the [[#Source Mapping |advanced documentation]] on it. 
+*'''Project'''&nbsp;: Set the LDT project in your workspace which includes the Lua source file(s) of the application you want to debug. <br> 
+*'''IdeKey'''&nbsp;: Default value is <tt>luaidekey</tt>, if you need to debug more than one application at the same time, you should change it to associate a launch configuration with only one application to debug.<br> 
+*'''Source Mapping'''&nbsp;: Define a common way for DBGp Server (IDE) and DBGp Client (running application) to identify source file. There are several strategy, each more or less adapted to a specific used case. To better understand it, see the [[#Source Mapping |advanced documentation]] on it. 
 
-Now you can start your debug session by clicking '''Debug'''. IDE will wait for an incoming connection from the debugger client, on the port you can see in the debug view. By default the port used is 10000, but if it is taken, another one may be used.<br> 
+<br> Now you can start your debug session by clicking '''Debug'''. IDE will wait for an incoming connection from the debugger client, on the port you can see in the debug view. By default the port used is 10000, but if it is taken, another one may be used.<br> 
 
 [[Image:DebugView.png|center]] 
 
@@ -327,8 +351,8 @@ In the Remote System Explorer perspective, in the new wizard, create a new ''Con
 On the next page, enter the network name of your remote system, or directly the IP address.
 [[Image:createConnexionEnterIP.png|center]]
 
-If needed, configure runtime paths in ssh-lua sub-system advanced properties, if paths are not configured, the remote environment variables will be used. To change the properties, select the ssh lua node of you connection, then in the property view bellow push the ''show advanced properties'' button. You can edit properties values by selecting the appropriate cell. If you let some properties empty, the remote system lua default will be used. 
-Warning, LDT is not able to retrieve environement variables specfied in the user scope. For exemple, if the variable LUA_PATH is modified in the .profile or .bashrc files of the remote user, on runtime theses modifications may not be taken intp account.
+If needed, configure runtime paths in ssh-lua sub-system advanced properties, if paths are not configured, the remote environement variables will be used. To change the properties, select the ssh lua node of you connection, then in the property view bellow push the ''show advanced properties'' button. You can edit properties values by slecting the appropriate cell. If you let some properties empty, the remote system lua default will be used. 
+Warning, LDT is not able to retrieve environement variables specfied in the user scope. For exemple, if the variable LUA_PATH is modified in the .profile or .bashrc files of the remote user, on runtime theses modification will not be taken in account.
 [[Image:remoteConnection.png|center]]
 
 In the top menu, select ''Run/Debug Configuration...''.
@@ -339,15 +363,15 @@ Configure the project and the script to run, select also the remote system.
 [[Image:RemoteLaunchConf.png|center]]
 
 Following tab are also provided to configure your launch configuration:
-*''Arguments'': you can here specify script and remote interpreter arguments, type the arguments as you would in command line. At the bottom of the tab, you can also edit the location where Lua files will be copied on the remote system, an absolute path is mandatory.
-*''Environment'': Specify here some environement variables for runtime. If the variable already exists on the remote system, the specifed value in the launch configuration will be appended to the existing value. Warning, as explained above, LDT is not able to retrieve environement variables values specfied in the user scope.
+*''Arguments'': you can here specify script and remote interpreter arguments, type the argument as you do it in normal shell. At the bottom on the tab, you can also custom the location where file will be copied on the remote target, it's hightly recommanded to specify an absolute path.
+*''Environement'': Specify here some environement variable for the runtime. If the variable already exist on the remote system, the specifed value in the launch configuration will be append to the existing variable. Warning, as explain above, LDT is not able to retrieve environement variables values specfied in the user scope.
 *''Common'': Some common launch configuration related settings.
 **Save current launch configuration in a specified file.
 **See in favorite menu the launch conf is displayed.
 **Change the encoding of the launch configuration file.
-**Allocates standard input/output in a console and/or redirects standard output in a file.
+**Allocate  sandard input/output in a console and/or redirect standard output in a file.
 
-Launch the debug session, see how [Debugging a Lua program] to continue.
+Launch the debug session, see how to [Debugging a Lua program] to continue.
 
 == Debugging a Lua program  ==
 
@@ -363,7 +387,7 @@ You can optionally indicate conditions to stop execution only under specific cir
 
 [[Image:Dbg-properties.png|center]] 
 
-#Enables or disables breakpoint globally.
+#Enable or disable breakpoint globally.
 #Condition on hit count (stop only after the 3rd hit, every 4 hits, etc.).
 #Conditional breakpoint: you can put any expression, it will be evaluated using the local scope every time the breakpoint is hit, and stop only when the expression evaluates to true.
 
@@ -409,10 +433,10 @@ This way to resolve the source mapping is the more simple and the more reliable.
 * '''Module Resolution'''
 Both IDE and application have their own way to retrieve a module from its name. So we could use the module name has file ID instead of path.
 With this mode, you could do remote debugging without setting a list of path mapping.
-The limitation is that you should use the standard LUA_PATH way to load module.
-Another problem is that we could not really retrieve the module name at client side, because the Lua debug API uses source pathes. The module name is retrieved from the path (from debug.getinfo) and the LUA_PATH (package.path), so with ambiguous LUA_PATH you could have insolvable conflict.<br/>
+The limitation is that you should use the standard lua_path way to load module.
+Another problem is that we could not really retrieve the module name at client side, because the Lua debug api uses source path. The module name is retrieved from the path (from debug.getinfo) and the lua_path (package.path), so with ambiguous lua_path you could have insolvable conflict.<br/>
 ''E.g: with <code>package.path = "/foo/bar/?.lua, /foo/?.lua"</code> and <code>debug.getinfo="@/foo/bar/baz.lua"</code> the possible module name is bar.baz or baz ''<br/>
-There are no way to know the real module name, in this case the debugger will use the shorter one, but the ideal is to avoid ambiguous LUA_PATH with this mode.
+There are no way to know the real module name, in this case the debugger will use the shorter one, but the ideal is to avoid ambiguous lua_path with this mode.
 
 * '''Replace path Resolution'''
 This mode is a fallback. If the two previous one don't fit your needs, you could try it.
@@ -434,6 +458,3 @@ On windows, you should prefix your path with "/" (e.g. /C:/foo/bar/)
 The '''dynamic code''' is not supported, it means that any code that is loaded with <tt>load</tt>, <tt>loadstring</tt> will not be supported. The debugger will step over it just like a C function. 
 
 The debugger is officially supported for Lua VM 5.1. Any other implementation (Lua 5.2, LuaJIT, ...) is not guaranteed to work at this time.
-
-
-
