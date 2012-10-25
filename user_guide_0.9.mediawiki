@@ -108,14 +108,19 @@ An Execution Environment may contain:
 ** '''documentation''': straight from modules comments using [[Koneki/LDT/User_Area/Documentation_Language| Lua Documentation Language]].
 * '''version''': which is handy when working on several projects.
 
-[[Koneki/LDT/User_Area/Execution_Environment_file_format|Make an Execution Environment]]<br/>
+[[Koneki/LDT/User_Area/Execution_Environment_file_format|Create an Execution Environment]]<br/>
 [[#Managing_Execution_Environments|Manage Execution Environments]]
 
 == Interpreters ==
 
 In our case, an interpreter is a program  which executes the instructions of
 your program. The most used in the Lua world might be
-(http://www.lua.org/manual/5.1/manual.html#6 "Lua standalone interpreter").
+(http://www.lua.org/manual/5.1/manual.html#6 "Lua standalone interpreter"). It
+is possible to run Lua application using interpreters from Konkeki LDT. There is
+a JNLua base implementation available ''out of the box'', but you can use your
+own.
+
+[[#Managing_Interpreters|Manage interpreters]]
 
 == Debug ==
 
