@@ -84,7 +84,7 @@ with features such as ''code completion'' and ''code navigation''.
 === Runtime path ===
 
 This path describe the source and libraries available to your program at
-runtime. It is composed of 
+runtime, it is composed of 
 (http://www.lua.org/manual/5.1/manual.html#pdf-LUA_PATH $LUA_PATH) and each
 ''source parth'' of your project.
 
