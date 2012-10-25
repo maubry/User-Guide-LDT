@@ -62,7 +62,7 @@ It is a set of ''folder paths'' which contains source and libraries accessible
 from your project. There are several kinds of them:
 * Project dependencies
 * Source folders
-* [Execution_Environments|Execution Environments]
+* [[#Execution_Environments|Execution Environments]]
 
 Some elements like ''source folders'' and ''project dependencies'' are used for
 ''tooling'' and ''runtime'' purposes. Some others, are used only for ''tooling''
@@ -88,18 +88,28 @@ information. That is to say, if you write a module
 module or script; thus, its content will not be available in e.g.
 ''code completion'' nor ''documentation''.
 
-[http://www.foo.org|"Manage buildpaths"]
+[[#Configuring_Build_paths|Configuring Buildpaths]]
 
 == Execution Environment ==
 
 An Execution Environment, which may also be referred to as ''EE'', is a file
 containing information about the environment where a Lua application is supposed
 to run. An ''environment'' is a set of libraries available to the application
-out of the box, as in ''Lua 5.1'' or ''Corona SDK''.
+out of the box, as in ''Lua 5.1'' or ''MOAI SDK''.
 
 The idea is to provide a file which describe elements of an environment.
 Provided information allows LDT to offer better code completion, code navigation
 and documentation layout.
+
+An Execution Environment may contain:
+* '''bootstrap file''': template of typical entry point for an application aiming this execution environment, so for named ''main.lua''.
+* '''modules'''
+** '''code assistance''': is possible to use module ''API'' described with [[Koneki/LDT/User_Area/Documentation_Language| Lua Documentation Language]].
+** '''documentation''': straight from modules comments using [[Koneki/LDT/User_Area/Documentation_Language| Lua Documentation Language]].
+* '''version''': which is handy when working on several projects.
+
+[[Koneki/LDT/User_Area/Execution_Environment_file_format|Make an Execution Environment]]<br/>
+[[#Managing_Execution_Environments|Manage Execution Environments]]
 
 == Interpreters ==
 
