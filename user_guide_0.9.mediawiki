@@ -70,7 +70,7 @@ purposes, such as [Execution_Environments|Execution Environments].
 
 About ''runtime'' , source folders of ''current'' project and the ones of
 projects on which it depends will be appended to
-[http://www.lua.org/manual/5.1/manual.html#pdf-LUA_PATH|LUA_PATH] at runtime.
+[[http://www.lua.org/manual/5.1/manual.html#pdf-LUA_PATH|LUA_PATH]] at runtime.
 
 About ''tooling'', all elements from buildpath are parsed to unleash the power
 of tooling with features such as ''code completion'' and ''code navigation''.
@@ -115,7 +115,7 @@ An Execution Environment may contain:
 
 In our case, an interpreter is a program  which executes the instructions of
 your program. The most used in the Lua world might be
-(http://www.lua.org/manual/5.1/manual.html#6 "Lua standalone interpreter"). It
+[[http://www.lua.org/manual/5.1/manual.html#6|Lua standalone interpreter]]. It
 is possible to run Lua application using interpreters from Konkeki LDT. There is
 a JNLua base implementation available ''out of the box'', but you can use your
 own.
@@ -132,7 +132,7 @@ on your computer.
 
 It is the typical case, you monitor a program running on your desktop.
 
-(http://www.foo.org "Debug a local application")
+[[#Local_session|Configure a Local Debug session]]
 
 ===Attach Debug===
 
@@ -142,22 +142,20 @@ application can ''connect'' to the IDE at startup and be monitored.
 
 This way is called ''attached debug'', uses DBGp and is composed of two parties.
 
-(http://www.foo.org "Configure an attach debug session")
+* '''DBGp Server''': In our case it is ''Koneki LDT'' waiting for an application to connect.
+* '''DBGp Client''': In our case, it is the ''debugged application'' sending information about its run to ''Koneki LDT''.
 
-====DBGp Client====
-
-In our case it is ''Koneki LDT'' waiting for an application to connect.
-
-====DBGp Server====
-
-In our case, it is the ''debugged application'' sending information about its
-run to ''Koneki LDT''.
+[[#Attach_session|Configure an Attach Debug session]]
 
 ===Remote Debug===
 
-''Remote Debug'' enables to monitor an application running on a remote system,
-it rely on the same components as ''Attached Debug'' but automatize some
-configuration aspects.
+''Remote Debug'' enables to monitor an application running on a remote system.
+This system '''must have''' the following installed:
+* Unix-like
+* SFTP
+* SSH
+
+[[#Remote_session|Configure a Remote Debug session]]
 
 = Tasks =
 
