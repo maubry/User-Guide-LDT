@@ -54,7 +54,7 @@ Select your project in favorite debug sessions and your breakpoint should be hit
 
 Before diving into the concepts of LDT, if you need more information
 about the concepts of Lua itself, you are highly encouraged to refer to
-the Lua manual (http://www.lua.org/manual/5.1/).
+the Lua manual (http://www.lua.org/manual/).
 
 == Buildpath ==
 
@@ -254,31 +254,51 @@ In the ''Common'' tab, you can set some settings related to launch configuration
 
 == Attach session ==
 
-The Debugger of Lua Development Tools is based on the DBGp protocol, and the IDE implements a DBGp server. <br>
-To connect to this server, and begin remote/attach debugging, you need to use a [[Media:Debugger_lua.zip|DBGp Lua client]]. TODO verify download link 
+The Debugger of Lua Development Tools is based on the DBGp protocol, and the IDE implements a DBGp server.<br> To connect to this server, and begin remote/attach debugging, you need to use a DBGp Lua client.
 
 === Launching DBGp Client  ===
 
-The DBGp Lua client is composed of two Lua files and can be downloaded [https://hudson.eclipse.org/hudson/job/koneki-ldt/lastSuccessfulBuild/artifact/libraries/luadbgpclient/target/Debugger_lua.zip here].<br> It runs on Unix-like OS and Windows (XP and later). It is written in '''Lua 5.1''' and '''depends on lua-socket'''.<br> ''You can get Lua on http://www.lua.org/download.html and install lua-socket thanks to [http://luarocks.org/en/Download luarocks], or via your official OS repositories.''<br> 
+The DBGp Lua client is a Lua file and can be downloaded through the lua Attach To Application launch configuration UI.<br>
 
-To use it, you must have these two files in your Lua path.<br> To begin the connection, you must execute this Lua code :
+TODO add screenshot
+
+It runs on Unix-like OS and Windows (XP and later). It is written in '''Lua''' and '''depends on lua-socket'''.<br>
+''You can get Lua on http://www.lua.org/download.html and install lua-socket thanks to [http://luarocks.org/en/Download luarocks], or via your official OS repositories.''<br>
+''If for some reasons you can not use lua-socket, we did an abstraction of the communication layer so you could do your own implementation see''<br>
+TODO add a link to abstract layer 
+
+To use it, you must have the <tt>debugger.lua</tt> file in your Lua path.<br>
+To begin the connection, you must execute this Lua code : 
 
  > local initconnection = require("debugger")
- > initconnection(host, port, idekey)
+ > initconnection(idehost, ideport, idekey,)
 
 which can be shortened like this: 
 
- > require("debugger")(host, port, idekey)
+ > require("debugger")(idehost, ideport, idekey)
 
-*'''<tt>host</tt>''': the host name or the IP address of the DBGp server (thus, of your IDE). 
-**if <tt>host</tt> is <tt>nil</tt>, the <tt>DBGP_IDEHOST</tt> environment variable is used. 
+*'''<tt>idehost</tt>''': the host name or the IP address of the DBGp server (thus, of your IDE). 
+**if <tt>idehost</tt> is <tt>nil</tt>, the <tt>DBGP_IDEHOST</tt> environment variable is used. 
 **if the environment variable is <tt>nil</tt>, the default value '127.0.0.1' is used. 
-*'''<tt>port</tt>''': the port of the DBGp server (must be configured in the IDE). 
-**if <tt>port</tt> is nil, the <tt>DBGP_IDEPORT</tt> environment variable is used. 
+*'''<tt>ideport</tt>''': the port of the DBGp server (must be configured in the IDE). 
+**if <tt>ideport</tt> is nil, the <tt>DBGP_IDEPORT</tt> environment variable is used. 
 **if the environment variable is <tt>nil</tt>, the default value '10000' is used. 
 *'''<tt>idekey</tt>''': a string which is used as session key (must be configured in the IDE). 
-**if <tt>IDEKEY</tt> is <tt>nil</tt>, the <tt>DBGP_IDEKEY</tt> environment variable is used. 
+**if <tt>idekey</tt> is <tt>nil</tt>, the <tt>DBGP_IDEKEY</tt> environment variable is used. 
 **if the environment variable is <tt>nil</tt>, the default value '<tt>luaidekey</tt>' is used.
+Advanced optional parameters :
+*'''<tt>transport</tt>''': the module name of the transport abstraction used to do the connection with the server.
+** by default the debugger use the internal implementation based on luasocket, but if can not use it, you could implement or use another transport layer.
+** if <tt>transport</tt> is <tt>nil</tt>, the DBGP_TRANSPORT env var is used.
+** if the env var is <tt>nil</tt>, the default value '<tt>debugger.transport.luasocket</tt>' is used : this is the default implementation based on luasocket.
+*'''<tt>platform</tt>''': 'unix' or 'win32' string which define the kind of platform on which the program to debug is executed.
+** by default the debugger will try to guess it and surely success, if for some reasons it fails you could help it by precise the execution platform.
+** if <tt>platform</tt> is nil, the DBGP_PLATFORM env var is used.
+** if the env var is nil, the debugger will try to guess it.
+*'''<tt>workingdir</tt>''': the working directory in which the program to debug is executed.
+** by default the debugger will try to guess it and surely success, if for some reasons it fails you could help it by precise the working directory. 
+** if <tt>workingdir</tt> is nil, the DBGP_WORKINGDIR env var is used.
+** if the env var is nil, the debugger will try to guess it
 
 So, to debug any Lua script, you can do: 
 
