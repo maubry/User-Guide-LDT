@@ -219,13 +219,26 @@ Koneki LDT will copy all files in your buildpath on the remote directory of your
 
 ==Configuring Build paths==
 
-Project path is the one set using the right click ''Build Path > Configure Build Path ...'' UI. From there you can
-specify dependency to other project from current workspace. As a result,
-will enjoy completion and navigation between your project and the ones configured in Build Path.
+See [[Buildpath]].
 
-[[Image:BuildPath.png|center]]
+=== Adding source folder ===
+
+You can add a folder in the source path by right clicking on it and select ''BuildPath >> Use as Source Folder''
+[[Image:AddFolderToSourcePath0.9.png|center]]
+
+=== Adding project dependencies ===
+
+On the project you want to add the dependency right click and select''Build Path > Configure Build Path ...''.
+
+[[Image:BuildPath.png|center]
+
+Then Select the ''Projects'' tab and use the ''add'' button to create the dependency.
+
+[[Image:AddProjectDependency0.9.png|center]
 
 == Managing Execution Environments ==
+
+See [[Execution Environment]].
 
 To find preferences related to ''EE'', go to
 ''Window > Preferences > Lua > Execution Environments'' and you will have following interface.
@@ -234,8 +247,6 @@ To find preferences related to ''EE'', go to
 
 As you can see in previous screenshot, ''Koneki LDT'' is deliver with a Lua 5.1 Execution Environment.
 Embedded Execution Environment are suffixed by ''(embedded)''.
-To override an installed embedded Execution Environment, create a new Execution Environment with the same name. 
-All the projects using the embedded Execution Environment will automatically use the new one.
 
 From there, is it possible to add an ''EE'' to current workspace by
 pressing ''Add'', then select an ''Execution Environment''.
@@ -246,16 +257,17 @@ The EE is now available.
 
 [[Image:EePrefAdded.png|center]]
 
+If you need to override an installed embedded Execution Environment, create a new Execution Environment with the same name. 
+All the projects using the embedded Execution Environment will automatically use the new one.
+
 === Link an existing project to an Execution Environment ===
 
-Once you have manage to install Execution Environments in your
-workspace, it is time to use them in a project. Right click a project
+If you have create a project without Execution Environment, you can add it afterwards. Right click a project
 and select ''Build Path >> Add Libraries ...''.
 
 [[Image:EeContextSelection.png|center]]
 
-You will have to choose between several libraries types, choose
-''Lua Execution Environment''.
+You will have to choose between several libraries types, choose ''Lua Execution Environment''.
 
 [[Image:EeAddLib.png|center]]
 
@@ -267,10 +279,9 @@ It is now linked to selected project.
 
 [[Image:EeAddedToProject.png|center]]
 
-
 == Managing Interpreters ==
 
-Interpreters are used by ''Koneki LDT'' to run scripts on the local computers. 
+Interpreters are used by ''Koneki LDT'' to run scripts on the local computers, see [[Interpreters]].
 
 === Embedded Interpreters ===
 
@@ -294,15 +305,19 @@ Then, press the ''Add...'' button to configure a new interpreter and fill in the
 * Leave the ''Interpreter type'' as ''Generic Lua''.
 * You can browse your file system and locate your interpreter executable, or if the executable is in your PATH environment variable, just type its name here (e.g. <code>lua</code>),
 * Give a name to the interpreter (this is mandatory),
-* Add extra interpreter's arguments if needed, the same way you would on a regular command line,
+* Add extra interpreter's arguments if needed, the same way you would on a regular command line.
 * Set environment variables for this interpreter. You can modify existing variables, or create new ones. Environment variables can be exported and imported using properties files.
 
 [[Image:AddInterpreter.png|center]]
+
+{{tips|Buffer configuration|Some console output problems could happen because of buffer configuration. To force the stdout buffer to be flush at each call of print your should add this argument to your interpreter: ''-e "io.stdout:setvbuf('line')"''.}}
 
 Once you press the ''Ok'' button, the created interpreter appears in the Interpreters page. The checkbox in front of each interpreter allows to check the default interpreter used in launch configurations.
 [[Image:CreatedInterpreter.png|center]]
 
 == Configuring debug sessions ==
+
+See the [[Debug|explanation about the three way to debug]] in ''Koneki LDT''.
 
 === Local session ===
 
@@ -444,19 +459,20 @@ Configure the project and the script to run, select also the remote system.
 [[Image:RemoteLaunchConf.png|center]]
 
 Following tab are also provided to configure your launch configuration:
-''Arguments'': you can here specify script and remote interpreter arguments, type the arguments as you would in command line. At the bottom of the tab, you can also edit the location where Lua files will be copied on the remote system, an absolute path is mandatory.
-''Environment'': Specify here some environement variables for runtime. Theses variables will be added to remote system's existing environement variables.
-As explained above, ''Koneki LDT'' is not able to retrieve environement variables values specfied in the user scope.
-''Common'': Some common launch configuration related settings.
-*Save current launch configuration in a specified file.
-*See in favorite menu the launch conf is displayed.
-*Change the encoding of the launch configuration file.
-*Allocates standard input/output in a console and/or redirects standard output in a file.
+*''Arguments'': you can here specify script and remote interpreter arguments, type the arguments as you would in command line. At the bottom of the tab, you can also edit the location where Lua files will be copied on the remote system, an absolute path is mandatory.
+*''Environment'': Specify here some environement variables for runtime. Theses variables will be added to remote system's existing environement variables. As explained above, ''Koneki LDT'' is not able to retrieve environement variables values specfied in the user scope.
+*''Common'': Some common launch configuration related settings.
+**Save current launch configuration in a specified file.
+**See in favorite menu the launch conf is displayed.
+**Change the encoding of the launch configuration file.
+**Allocates standard input/output in a console and/or redirects standard output in a file.
 
 Launch the debug session, see how [Debugging a Lua program] to continue.
 
 
 == Debugging a Lua program  ==
+
+See how to launch debug in previous section called ''[[Configuring debug sessions]]''.
 
 === Breakpoints, code navigation  ===
 
