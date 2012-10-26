@@ -52,13 +52,13 @@ Select your project in favorite debug sessions and your breakpoint should be hit
 
 = Concepts =
 
-Before diving into the concepts of ''Koneki LDT'', if you need more information
-about the concepts of Lua itself, you are highly encouraged to refer to
-the Lua manual (http://www.lua.org/manual/).
+Before diving into concepts of ''Koneki LDT'', if you need more information
+about the concepts of Lua itself, you are highly encouraged to refer to the
+[http://www.lua.org/manual/ Lua manual].
 
 == Buildpath ==
 
-It is a set of ''folder paths'' which contains source and libraries accessible
+It is a set of ''folder paths'' which contains sources and libraries accessible
 from your project. There are several kinds of them:
 * Project dependencies
 * Source folders
@@ -70,23 +70,28 @@ purposes, such as [[Execution_Environments|Execution Environments]].
 
 About ''runtime'' , source folders of ''current'' project and the ones of
 projects on which it depends will be appended to
-[http://www.lua.org/manual/5.1/manual.html#pdf-LUA_PATH LUA_PATH] at runtime.
+[http://www.lua.org/manual/5.1/manual.html#pdf-LUA_PATH LUA_PATH] at-once.
 
 About ''tooling'', all elements from buildpath are parsed to unleash the power
-of tooling with features such as ''code completion'' and ''code navigation''.
+of tooling with features such as ''code completion'',  ''code navigation'' and
+''TODO / Tasks''.
 
 You can require files from your source folders as modules. Lets say in a
-<code>src/</code> source path you a <code>foo.lua</code> file, you can write:
+<code>src/</code> source path you have a <code>foo.lua</code> file, you can
+write:
     require 'foo'
-This logic applies to sub directories, with a <code>bar.lua</code> in folder
-<code>src/sub</code>, you can use:
+This logic applies to sub directories, with a <code>bar.lua</code> file in
+folder <code>src/sub/</code>, you can use:
     require 'sub.bar'
+The <code>init.lua</code> formalism is also handled. If you have an
+<code>init.lua</code> file under directory <code>src/bar/</code>, you can write:
+    require 'bar'
 
 '''Note''': ''Source folders'' are important, as they are processed for tooling
 information. That is to say, if you write a module
 '''outside of a source folder''' , it will '''not be accessible''' from another
 module or script; thus, its content will not be available in e.g.
-''code completion'' nor ''documentation''.
+''code completion'', ''documentation'' nor ''TODO/Tasks''.
 
 [[#Configuring_Build_paths|Configure Buildpaths]].
 
@@ -103,22 +108,26 @@ and documentation layout.
 
 An Execution Environment may contain:
 * '''bootstrap file''': template of typical entry point for an application aiming this execution environment, so far named ''main.lua''.
-* '''modules'''
-** '''code assistance''': is possible to use module ''API'' described with [[Koneki/LDT/User_Area/Documentation_Language| Lua Documentation Language]].
-** '''documentation''': straight from modules comments using [[Koneki/LDT/User_Area/Documentation_Language| Lua Documentation Language]].
-* '''version''': which is handy when working on several projects.
+* Description for '''globals'''  and '''modules API'''s with [http://wiki.eclipse.org/Koneki/LDT/User_Area/Documentation_Language Lua Documentation Language] which provides:
+** '''code assistance'''
+** '''documentation'''
 
-[[Koneki/LDT/User_Area/Execution_Environment_file_format|Create an Execution Environment]]<br/>
+[http://wiki.eclipse.org/Koneki/LDT/User_Area/Execution_Environment_file_format Create an Execution Environment]<br/>
 [[#Managing_Execution_Environments|Manage Execution Environments]]
 
 == Interpreters ==
 
-In our case, an interpreter is a program  which executes the instructions of
-your program. The most used in the Lua world might be
+In our case, an interpreter is a program  which executes  instructions of your
+program. The most used in the Lua world might be
 [http://www.lua.org/manual/5.1/manual.html#6 Lua standalone interpreter]. It
-is possible to run Lua application using interpreters from ''Koneki LDT''. There is
+is possible to run Lua application using interpreters from Konkeki LDT. There is
 a JNLua base implementation available ''out of the box'', but you can use your
 own.
+
+'''Note''': if you intent to [[#Debugging_a_Lua_program|debug]] with you own
+interpreter, you have to '''ensure two things''':
+* Your interpreter has ''-e'' option.
+* You have ''luasocket'' installed and available from your interpreter.
 
 [[#Managing_Interpreters|Manage interpreters]]
 
@@ -151,9 +160,9 @@ This way is called ''attached debug'', uses DBGp and is composed of two parties.
 
 ''Remote Debug'' enables to monitor an application running on a remote system.
 This system '''must have''' the following installed:
-* Unix-like
 * SFTP
 * SSH
+* Unix-like
 
 [[#Remote_session|Configure a Remote Debug session]]
 
