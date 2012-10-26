@@ -289,7 +289,7 @@ The DBGp Lua client is a Lua file and can be downloaded through the '''Lua Attac
 
 It runs on Unix-like OS and Windows (XP and later). It is written in '''Lua''' and '''depends on lua-socket'''.<br>
 ''You can get Lua on http://www.lua.org/download.html and install lua-socket thanks to [http://luarocks.org/en/Download luarocks], or via your official OS repositories.''<br>
-''If for some reasons you can not use lua-socket, we did an abstraction of the communication layer so you could do your own implementation see''<br>
+''If for some reasons you can not use lua-socket, you could implement your own transport interface based on your own library (see the interface and the transport parameter)''<br>
 TODO add a link to abstract layer 
 
 To use it, you must have the <tt>debugger.lua</tt> file in your Lua path.<br>
@@ -312,8 +312,8 @@ which can be shortened like this:
 **if <tt>idekey</tt> is <tt>nil</tt>, the <tt>DBGP_IDEKEY</tt> environment variable is used. 
 **if the environment variable is <tt>nil</tt>, the default value '<tt>luaidekey</tt>' is used.
 Advanced optional parameters :
-*'''<tt>transport</tt>''': the module name of the transport abstraction used to do the connection with the server.
-** by default the debugger use the internal implementation based on luasocket, but if can not use it, you could implement or use another transport layer.
+*'''<tt>transport</tt>''': the module name of which implement the transport interface used to do the connection with the server.
+** by default the debugger use an  internal implementation based on luasocket, but if can not use it, you could implement or use another transport layer implementation.
 ** if <tt>transport</tt> is <tt>nil</tt>, the DBGP_TRANSPORT env var is used.
 ** if the env var is <tt>nil</tt>, the default value '<tt>debugger.transport.luasocket</tt>' is used : this is the default implementation based on luasocket.
 *'''<tt>platform</tt>''': 'unix' or 'win32' string which define the kind of platform on which the program to debug is executed.
