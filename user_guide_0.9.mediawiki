@@ -62,7 +62,7 @@ It is a set of ''folder paths'' which contains sources and libraries accessible
 from your project. There are several kinds of them:
 * Project dependencies
 * Source folders
-* [[Execution_Environments|Execution Environments]]
+* [[#Execution_Environment|Execution Environments]]
 
 Some elements like ''source folders'' and ''project dependencies'' are used for
 ''tooling'' and ''runtime'' purposes. Some others, are used only for ''tooling''
@@ -219,7 +219,7 @@ Koneki LDT will copy all files in your buildpath on the remote directory of your
 
 ==Configuring Build paths==
 
-See [[Buildpath]].
+See [[#Buildpath|Buildpath]].
 
 === Adding source folder ===
 
@@ -230,15 +230,15 @@ You can add a folder in the source path by right clicking on it and select ''Bui
 
 On the project you want to add the dependency right click and select''Build Path > Configure Build Path ...''.
 
-[[Image:BuildPath.png|center]
+[[Image:BuildPath.png|center]]
 
 Then Select the ''Projects'' tab and use the ''add'' button to create the dependency.
 
-[[Image:AddProjectDependency0.9.png|center]
+[[Image:AddProjectDependency0.9.png|center]]
 
 == Managing Execution Environments ==
 
-See [[Execution Environment]].
+See [[#Execution Environment|Execution Environment]].
 
 To find preferences related to ''EE'', go to
 ''Window > Preferences > Lua > Execution Environments'' and you will have following interface.
@@ -281,7 +281,7 @@ It is now linked to selected project.
 
 == Managing Interpreters ==
 
-Interpreters are used by ''Koneki LDT'' to run scripts on the local computers, see [[Interpreters]].
+Interpreters are used by ''Koneki LDT'' to run scripts on the local computers, see [[#Interpreters|Interpreters]].
 
 === Embedded Interpreters ===
 
@@ -310,14 +310,14 @@ Then, press the ''Add...'' button to configure a new interpreter and fill in the
 
 [[Image:AddInterpreter.png|center]]
 
-{{tips|Buffer configuration|Some console output problems could happen because of buffer configuration. To force the stdout buffer to be flush at each call of print your should add this argument to your interpreter: ''-e "io.stdout:setvbuf('line')"''.}}
+{{tip|Buffer configuration|Some console output problems could happen because of buffer configuration. To force the stdout buffer to be flush at each call of print your should add this argument to your interpreter: ''-e "io.stdout:setvbuf('line')"''.}}
 
 Once you press the ''Ok'' button, the created interpreter appears in the Interpreters page. The checkbox in front of each interpreter allows to check the default interpreter used in launch configurations.
 [[Image:CreatedInterpreter.png|center]]
 
 == Configuring debug sessions ==
 
-See the [[Debug|explanation about the three way to debug]] in ''Koneki LDT''.
+See the [[#Debug|explanation about the three way to debug]] in ''Koneki LDT''.
 
 === Local session ===
 
