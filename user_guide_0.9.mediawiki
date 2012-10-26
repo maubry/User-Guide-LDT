@@ -283,9 +283,9 @@ The Debugger of Lua Development Tools is based on the DBGp protocol, and the IDE
 
 ==== Launching DBGp Client  ====
 
-The DBGp Lua client is a Lua file and can be downloaded through the lua Attach To Application launch configuration UI.<br>
+The DBGp Lua client is a Lua file and can be downloaded through the '''Lua Attach to Application''' launch configuration UI.<br>
 
-TODO add screenshot
+[[Image:DownloadDebuggerClient0.9.png|center]]
 
 It runs on Unix-like OS and Windows (XP and later). It is written in '''Lua''' and '''depends on lua-socket'''.<br>
 ''You can get Lua on http://www.lua.org/download.html and install lua-socket thanks to [http://luarocks.org/en/Download luarocks], or via your official OS repositories.''<br>
@@ -346,7 +346,7 @@ The DBGp Server is integrated in ''Koneki LDT''.<br> In order to accept incoming
 
 Go in '''Run/Debug Configurations...'''.
 
-[[Image:LaunchConfiguration.png|center]]
+[[Image:LuaAttachToApplication0.9.png|center]]
 
 *'''Project''': Set the ''Koneki LDT'' project in your workspace which includes the Lua source file(s) of the application you want to debug. <br> 
 *'''IdeKey''': Default value is <tt>luaidekey</tt>, if you need to debug more than one application at the same time, you should change it to associate a launch configuration with only one application to debug.<br> 
@@ -354,11 +354,11 @@ Go in '''Run/Debug Configurations...'''.
 
 Now you can start your debug session by clicking '''Debug'''. IDE will wait for an incoming connection from the debugger client, on the port you can see in the debug view. By default the port used is 10000, but if it is taken, another one may be used.<br> 
 
-[[Image:DebugView.png|center]] 
+[[Image:LuaAttachToApplicationDebugView0.9.png|center]] 
 
 If needed, you can change the server port, in ''Window > Preferences > Dynamic Languages > Debug''. 
 
-[[Image:DebugUI.png|center]]
+[[Image:ConfigureDebuggerPort0.9.png|center]]
 
 === Remote session ===
 
