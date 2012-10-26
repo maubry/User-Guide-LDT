@@ -120,7 +120,7 @@ An Execution Environment may contain:
 In our case, an interpreter is a program  which executes  instructions of your
 program. The most used in the Lua world might be
 [http://www.lua.org/manual/5.1/manual.html#6 Lua standalone interpreter]. It
-is possible to run Lua application using interpreters from Konkeki LDT. There is
+is possible to run Lua application using interpreters from Koneki LDT. There is
 a JNLua base implementation available ''out of the box'', but you can use your
 own.
 
@@ -140,19 +140,66 @@ on your computer.
 ===Local Debug===
 
 It is the typical case, you monitor a program running on your desktop.
+Your application will be executed by an interpreter referenced in Koneki LDT.
+Koneki LDT will manage the LUA_PATH setting to allow the interpreter to access to all files in your buildpath.
 
+[[#Buildpath|Concepts Buildpath]]<br/>
+[[#Interpreters|Concepts Interpreters]]<br/>
 [[#Local_session|Configure a Local Debug session]]
 
 ===Attach Debug===
 
 You want to monitor a an application running in a specific context, this
-application is not launched from ''Koneki LDT''. There is a solution for you. Your
+application can not be launched from ''Koneki LDT''. There is a solution for you. Your
 application can ''connect'' to the IDE at startup and be monitored.
 
 This way is called ''attached debug'', uses DBGp and is composed of two parties.
 
 * '''DBGp Server''': In our case it is ''Koneki LDT'' waiting for an application to connect.
-* '''DBGp Client''': In our case, it is the ''debugged application'' sending information about its run to ''Koneki LDT''.
+* '''DBGp Client''': In our case, it is the ''debugger.lua'' file executed in your debugged application which sending information about its run to ''Koneki LDT''.
+
+This way is more flexible, but you are on your own to manage all about runtime configuration (LUA_PATH, debugger bootstrap, ...).
+
+[[#Attach_session|Configure an Attach Debug session]]
+
+==== Source Mapping  ====
+
+The DBGp Server (IDE) and the DBGp client (running application) need to communicate about source files.
+
+''E.g. When you set a breakpoint, the IDE need to say to the running application on which file the breakpoint must be added.''
+
+''E.g. When the running application stops on a breakpoint of a file, the IDE must retrieve the file and open it.''
+
+The problem is that the file executed in your Lua VM could be physically different than the source file in your IDE (in your workspace).
+For example, in the case where your code is executed on a different host or just if your executed code is duplicated in another folder.
+
+To resolve this problem, ''Koneki LDT'' proposes to you different strategies, each with advantages and drawbacks :
+ 
+* '''Local Resolution'''
+This way to resolve the source mapping is the more simple and the more reliable. Both client and server works with absolute path. The IDE will search only in its buildpath a file which have the given absolute path. This means that executed file should be in your workspace (in your buildpath more exactly). So you can not use it to debug code on a remote host.
+
+* '''Module Resolution'''
+Both IDE and application have their own way to retrieve a module from its name. So we could use the module name has file ID instead of path.
+With this mode, you could do remote debugging without setting a list o	f path mapping.
+The limitation is that you should use the standard LUA_PATH way to load module.
+Another problem is that we could not really retrieve the module name at client side, because the Lua debug API uses source pathes. The module name is retrieved from the path (from debug.getinfo) and the LUA_PATH (package.path), so with ambiguous LUA_PATH you could have insolvable conflict.<br/>
+''E.g: with <code>package.path = "/foo/bar/?.lua, /foo/?.lua"</code> and <code>debug.getinfo="@/foo/bar/baz.lua"</code> the possible module name is bar.baz or baz ''<br/>
+There are no way to know the real module name, in this case the debugger will use the shorter one, but the ideal is to avoid ambiguous LUA_PATH with this mode.
+
+* '''Replace path Resolution'''
+This mode is a fallback. If the two previous one don't fit your needs, you could try it.
+In this mode, client talks with absolute path and server (IDE) uses relative path (relative to the buildpath).
+A path must be set in launchconfiguration to move from one world to another.<br/>
+
+''e.g: You set path with "/foo/bar/".<br/>
+when file path is sent from client (/foo/bar/baz/qux.lua), path will be removed (baz/qux.lua) and a file with this relative path will be searched in your buildpath.<br/>
+when file path is sent from server (baz/qux.lua), path will be add (/foo/bar/baz/qux.lua) and the absolute path will be sent to the client ''
+
+The problem is that you could set only one path.<br/>
+The path comparison is case sensitive (even on windows).<br/>
+On windows, you should prefix your path with "/" (e.g. /C:/foo/bar/)
+
+'''In all case, if file is not found in the workspace, the source code is sent via the DBGp protocol'''
 
 [[#Attach_session|Configure an Attach Debug session]]
 
@@ -163,6 +210,8 @@ This system '''must have''' the following installed:
 * SFTP
 * SSH
 * Unix-like
+
+Koneki LDT will copy all files in your buildpath on the remote directory of your choice (default is <code>/tmp</code>), and will also manage the LUA_PATH setting to allow the remote interpreter to access to those files.
 
 [[#Remote_session|Configure a Remote Debug session]]
 
@@ -302,25 +351,25 @@ which can be shortened like this:
 
  > require("debugger")(idehost, ideport, idekey)
 
-*'''<tt>idehost</tt>''': the host name or the IP address of the DBGp server (thus, of your IDE). 
+*'''idehost''': the host name or the IP address of the DBGp server (thus, of your IDE). 
 **if <tt>idehost</tt> is <tt>nil</tt>, the <tt>DBGP_IDEHOST</tt> environment variable is used. 
 **if the environment variable is <tt>nil</tt>, the default value '127.0.0.1' is used. 
-*'''<tt>ideport</tt>''': the port of the DBGp server (must be configured in the IDE). 
+*'''ideport''': the port of the DBGp server (must be configured in the IDE). 
 **if <tt>ideport</tt> is nil, the <tt>DBGP_IDEPORT</tt> environment variable is used. 
 **if the environment variable is <tt>nil</tt>, the default value '10000' is used. 
-*'''<tt>idekey</tt>''': a string which is used as session key (must be configured in the IDE). 
+*'''idekey''': a string which is used as session key (must be configured in the IDE). 
 **if <tt>idekey</tt> is <tt>nil</tt>, the <tt>DBGP_IDEKEY</tt> environment variable is used. 
 **if the environment variable is <tt>nil</tt>, the default value '<tt>luaidekey</tt>' is used.
 Advanced optional parameters :
-*'''<tt>transport</tt>''': the module name of which implement the transport interface used to do the connection with the server.
+*'''transport''': the module name of which implement the transport interface used to do the connection with the server.
 ** by default the debugger use an  internal implementation based on luasocket, but if can not use it, you could implement or use another transport layer implementation.
 ** if <tt>transport</tt> is <tt>nil</tt>, the DBGP_TRANSPORT env var is used.
 ** if the env var is <tt>nil</tt>, the default value '<tt>debugger.transport.luasocket</tt>' is used : this is the default implementation based on luasocket.
-*'''<tt>platform</tt>''': 'unix' or 'win32' string which define the kind of platform on which the program to debug is executed.
+*'''platform''': 'unix' or 'win32' string which define the kind of platform on which the program to debug is executed.
 ** by default the debugger will try to guess it and surely success, if for some reasons it fails you could help it by precise the execution platform.
 ** if <tt>platform</tt> is nil, the DBGP_PLATFORM env var is used.
 ** if the env var is nil, the debugger will try to guess it.
-*'''<tt>workingdir</tt>''': the working directory in which the program to debug is executed.
+*'''workingdir''': the working directory in which the program to debug is executed.
 ** by default the debugger will try to guess it and surely success, if for some reasons it fails you could help it by precise the working directory. 
 ** if <tt>workingdir</tt> is nil, the DBGP_WORKINGDIR env var is used.
 ** if the env var is nil, the debugger will try to guess it
@@ -448,45 +497,6 @@ In addition to variable view, you have two other useful tools to evaluate some c
 [[Image:Dbg-repl.png|frame|center|The interactive console allows you to type statements under the local scope]] 
 
 {{Warning|Always on top level|Due to a limitation in the DBGp protocol, the interactive console and expressions are always mapped to the top stack frame}}
-
-=== Source Mapping  ===
-
-The DBGp Server (IDE) and the DBGp client (running application) need to communicate about source files.
-
-''E.g. When you set a breakpoint, the IDE need to say to the running application on which file the breakpoint must be added.''
-
-''E.g. When the running application stops on a breakpoint of a file, the IDE must retrieve the file and open it.''
-
-The problem is that the file executed in your Lua VM could be physically different than the source file in your IDE (in your workspace).
-For example, in the case where your code is executed on a different host or just if your executed code is duplicated in another folder.
-
-To resolve this problem, ''Koneki LDT'' proposes to you different strategies, each with advantages and drawbacks :
- 
-* '''Local Resolution'''
-This way to resolve the source mapping is the more simple and the more reliable. Both client and server works with absolute path. The IDE will search only in its buildpath a file which have the given absolute path. This means that executed file should be in your workspace (in your buildpath more exactly). So you can not use it to debug code on a remote host.
-
-* '''Module Resolution'''
-Both IDE and application have their own way to retrieve a module from its name. So we could use the module name has file ID instead of path.
-With this mode, you could do remote debugging without setting a list o	f path mapping.
-The limitation is that you should use the standard LUA_PATH way to load module.
-Another problem is that we could not really retrieve the module name at client side, because the Lua debug API uses source pathes. The module name is retrieved from the path (from debug.getinfo) and the LUA_PATH (package.path), so with ambiguous LUA_PATH you could have insolvable conflict.<br/>
-''E.g: with <code>package.path = "/foo/bar/?.lua, /foo/?.lua"</code> and <code>debug.getinfo="@/foo/bar/baz.lua"</code> the possible module name is bar.baz or baz ''<br/>
-There are no way to know the real module name, in this case the debugger will use the shorter one, but the ideal is to avoid ambiguous LUA_PATH with this mode.
-
-* '''Replace path Resolution'''
-This mode is a fallback. If the two previous one don't fit your needs, you could try it.
-In this mode, client talks with absolute path and server (IDE) uses relative path (relative to the buildpath).
-A path must be set in launchconfiguration to move from one world to another.<br/>
-
-''e.g: You set path with "/foo/bar/".<br/>
-when file path is sent from client (/foo/bar/baz/qux.lua), path will be removed (baz/qux.lua) and a file with this relative path will be searched in your buildpath.<br/>
-when file path is sent from server (baz/qux.lua), path will be add (/foo/bar/baz/qux.lua) and the absolute path will be sent to the client ''
-
-The problem is that you could set only one path.<br/>
-The path comparison is case sensitive (even on windows).<br/>
-On windows, you should prefix your path with "/" (e.g. /C:/foo/bar/)
-
-'''In all case, if file is not found in the workspace, the source code is sent via the DBGp protocol'''
 
 === Unsupported features  ===
 
