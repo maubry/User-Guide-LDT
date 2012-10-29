@@ -1,6 +1,6 @@
 =Overview=
 
-The ''Koneki LDT'' project provides plug-ins that implement a Lua IDE supporting the
+The ''Koneki Lua Development Tools (LDT)'' project provides plug-ins that implement a Lua IDE supporting the
 development of Lua scripts and applications.
 It adds a dedicated Lua perspective to the Eclipse Workbench, which, together
 with features such as ''syntax highlighting'', ''scope-aware code completion'',
@@ -11,7 +11,7 @@ with features such as ''syntax highlighting'', ''scope-aware code completion'',
 
 ==Create a project==
 
-For your code to be manipulated correctly by Lua Development Tools, it must be
+For your code to be manipulated correctly by ''Lua Development Tools'', it must be
 contained into an Eclipse project having a ''Lua'' flavor. In order to do this,
 you have to create a Lua Project, which will add '''Lua nature''' to your code.
 
@@ -52,9 +52,9 @@ Select your project in favorite debug sessions and your breakpoint should be hit
 
 = Concepts =
 
-Before diving into concepts of ''Koneki LDT'', if you need more information
-about the concepts of Lua itself, you are highly encouraged to refer to the
-[http://www.lua.org/manual/ Lua manual].
+Before diving into concepts of ''Koneki LDT'', you may need more information
+about the concepts of Lua itself. In this case, you are highly encouraged to
+refer to the [http://www.lua.org/manual/ Lua manual].
 
 == Buildpath ==
 
@@ -97,7 +97,7 @@ module or script; thus, its content will not be available in e.g.
 
 == Execution Environment ==
 
-An Execution Environment, which may also be referred to as ''EE'', is a file
+An ''Execution Environment'', is a file
 containing information about the environment where a Lua application is supposed
 to run. An ''environment'' is a set of libraries available to the application
 out of the box, as in ''Lua 5.1'' or ''MOAI SDK''.
@@ -112,8 +112,9 @@ An Execution Environment may contain:
 ** '''code assistance'''
 ** '''documentation'''
 
-[http://wiki.eclipse.org/Koneki/LDT/User_Area/Execution_Environment_file_format Create an Execution Environment]<br/>
-[[#Managing_Execution_Environments|Manage Execution Environments]]
+[[#Managing_Execution_Environments|Manage Execution Environments]]<br/>
+[http://wiki.eclipse.org/Koneki/LDT/User_Area/Available_Execution_Environments Get an Execution Environment]<br/>
+[http://wiki.eclipse.org/Koneki/LDT/User_Area/Execution_Environment_file_format Create an Execution Environment]
 
 == Interpreters ==
 
@@ -121,15 +122,16 @@ In our case, an interpreter is a program  which executes  instructions of your
 program. The most used in the Lua world might be
 [http://www.lua.org/manual/5.1/manual.html#6 Lua standalone interpreter]. It
 is possible to run Lua application using interpreters from Koneki LDT. There is
-a JNLua base implementation available ''out of the box'', but you can use your
+a JNLua based implementation available ''out of the box'', but you can use your
 own.
 
-'''Note''': if you intent to [[#Debugging_a_Lua_program|debug]] with you own
+'''Note''': if you intent to [[#Local_session|debug]] with you own
 interpreter, you have to '''ensure two things''':
 * Your interpreter has ''-e'' option.
 * You have ''luasocket'' installed and available from your interpreter.
 
-[[#Managing_Interpreters|Manage interpreters]]
+[[#Managing_Interpreters|Manage interpreters]]<br/>
+[[#Local_session|Debug an application using interpreters]]
 
 == Debug ==
 
@@ -141,7 +143,8 @@ on your computer.
 
 It is the typical case, you monitor a program running on your desktop.
 Your application will be executed by an interpreter referenced in Koneki LDT.
-Koneki LDT will manage the LUA_PATH setting to allow the interpreter to access to all files in your buildpath.
+Koneki LDT will manage the [http://www.lua.org/manual/5.1/manual.html#pdf-LUA_PATH LUA_PATH]
+setting to allow the interpreter to access to all files in your buildpath.
 
 [[#Buildpath|Concepts Buildpath]]<br/>
 [[#Interpreters|Concepts Interpreters]]<br/>
@@ -151,12 +154,12 @@ Koneki LDT will manage the LUA_PATH setting to allow the interpreter to access t
 
 You want to monitor a an application running in a specific context, this
 application can not be launched from ''Koneki LDT''. There is a solution for you. Your
-application can ''connect'' to the IDE at startup and be monitored.
+application can connect to the IDE at startup and be monitored.
 
-This way is called ''attached debug'', uses DBGp and is composed of two parties.
+This way of debugging is called ''attached debug'', uses DBGp and is composed of two parties.
 
 * '''DBGp Server''': In our case it is ''Koneki LDT'' waiting for an application to connect.
-* '''DBGp Client''': In our case, it is the ''debugger.lua'' file executed in your debugged application which sending information about its run to ''Koneki LDT''.
+* '''DBGp Client''': In our case, it is the ''debugger.lua'' file executed in your debugged application which sends information about its run to ''Koneki LDT''.
 
 This way is more flexible, but you are on your own to manage all about runtime configuration (LUA_PATH, debugger bootstrap, ...).
 
@@ -176,14 +179,14 @@ For example, in the case where your code is executed on a different host or just
 To resolve this problem, ''Koneki LDT'' proposes to you different strategies, each with advantages and drawbacks :
  
 * '''Local Resolution'''
-This way to resolve the source mapping is the more simple and the more reliable. Both client and server works with absolute path. The IDE will search only in its buildpath a file which have the given absolute path. This means that executed file should be in your workspace (in your buildpath more exactly). So you can not use it to debug code on a remote host.
+This way to resolve the source mapping is the more simple and the more reliable. Both client and server works with absolute path. The IDE will search only in its buildpath a file which have the given absolute path. This means that executed files should be in your workspace (in your buildpath more exactly). So you can not use it to debug code on a remote host.
 
 * '''Module Resolution'''
-Both IDE and application have their own way to retrieve a module from its name. So we could use the module name has file ID instead of path.
-With this mode, you could do remote debugging without setting a list o	f path mapping.
+Both IDE and application have their own way to retrieve a module from its name. So we could use the module name as file ID instead of path.
+With this mode, you could do remote debugging without setting a list of path mapping.
 The limitation is that you should use the standard LUA_PATH way to load module.
 Another problem is that we could not really retrieve the module name at client side, because the Lua debug API uses source pathes. The module name is retrieved from the path (from debug.getinfo) and the LUA_PATH (package.path), so with ambiguous LUA_PATH you could have insolvable conflict.<br/>
-''E.g: with <code>package.path = "/foo/bar/?.lua, /foo/?.lua"</code> and <code>debug.getinfo="@/foo/bar/baz.lua"</code> the possible module name is bar.baz or baz ''<br/>
+''E.g: with <code>package.path = "/foo/bar/?.lua;/foo/?.lua"</code> and <code>debug.getinfo="@/foo/bar/baz.lua"</code> the possible module name is bar.baz or baz ''<br/>
 There are no way to know the real module name, in this case the debugger will use the shorter one, but the ideal is to avoid ambiguous LUA_PATH with this mode.
 
 * '''Replace path Resolution'''
@@ -211,7 +214,7 @@ This system '''must have''' the following installed:
 * SSH
 * Unix-like
 
-Koneki LDT will copy all files in your buildpath on the remote directory of your choice (default is <code>/tmp</code>), and will also manage the LUA_PATH setting to allow the remote interpreter to access to those files.
+Koneki LDT will copy all files in your buildpath on the remote directory of your choice (default is <code>/tmp</code>), and will also manage the LUA_PATH setting allow the remote interpreter to access to those files.
 
 [[#Remote_session|Configure a Remote Debug session]]
 
@@ -223,16 +226,16 @@ See [[#Buildpath|Buildpath]].
 
 === Adding source folder ===
 
-You can add a folder in the source path by right clicking on it and select ''BuildPath >> Use as Source Folder''
+You can add a folder in the source path by right clicking on it and select ''BuildPath > Use as Source Folder''
 [[Image:AddFolderToSourcePath0.9.png|center]]
 
 === Adding project dependencies ===
 
-On the project you want to add the dependency right click and select''Build Path > Configure Build Path ...''.
+On the project o which you want to add a dependency, right click and select''Build Path > Configure Build Path ...''.
 
 [[Image:BuildPath.png|center]]
 
-Then Select the ''Projects'' tab and use the ''add'' button to create the dependency.
+Then select the ''Projects'' tab and use the ''Add'' button to create the dependency.
 
 [[Image:AddProjectDependency0.9.png|center]]
 
@@ -240,30 +243,31 @@ Then Select the ''Projects'' tab and use the ''add'' button to create the depend
 
 See [[#Execution Environment|Execution Environment]].
 
-To find preferences related to ''EE'', go to
-''Window > Preferences > Lua > Execution Environments'' and you will have following interface.
+To find preferences related to Execution Environments, go to
+''Window > Preferences > Lua > Execution Environments'' and you will have the following interface.
 
 [[Image:EePref_09.png|center]]
 
-As you can see in previous screenshot, ''Koneki LDT'' is deliver with a Lua 5.1 Execution Environment.
-Embedded Execution Environment are suffixed by ''(embedded)''.
+As you can see in previous screenshot, ''Koneki LDT'' is shipped with a ''Lua 5.1 Execution Environment''.
+All Execution Environments shipped with Koneki LDT are suffixed by ''(embedded)''.
 
-From there, is it possible to add an ''EE'' to current workspace by
-pressing ''Add'', then select an ''Execution Environment''.
+From here, is it possible to add an Execution Environment to current workspace. 
+First, download an Execution Environment from the [http://wiki.eclipse.org/Koneki/LDT/User_Area/Available_Execution_Environments list of available Execution Environments] or [http://wiki.eclipse.org/Koneki/LDT/User_Area/Execution_Environment_file_format create your one Execution Environment].
+Then, back to the ''Execution Environments'' preference page, push ''Add'' button and select an Execution Environment file.
 
-[[Image:EePrefAdd.png|center]]
+[[Image:EePrefAdd0.9.png|center]]
 
-The EE is now available.
+The Execution Environment is now available to use.
 
-[[Image:EePrefAdded.png|center]]
+[[Image:EePrefAdded0.9.png|center]]
 
-If you need to override an installed embedded Execution Environment, create a new Execution Environment with the same name. 
-All the projects using the embedded Execution Environment will automatically use the new one.
+''If you need to override an installed embedded Execution Environment, create a new Execution Environment with the same name and add it.
+All the projects using the embedded Execution Environment will automatically use the new one.''
 
 === Link an existing project to an Execution Environment ===
 
-If you have create a project without Execution Environment, you can add it afterwards. Right click a project
-and select ''Build Path >> Add Libraries ...''.
+If you have created a project without Execution Environment, you can add it afterwards. Right click on a project
+and select ''Build Path > Add Libraries ...''.
 
 [[Image:EeContextSelection.png|center]]
 
@@ -271,9 +275,9 @@ You will have to choose between several libraries types, choose ''Lua Execution 
 
 [[Image:EeAddLib.png|center]]
 
-You can now choose among installed EEs and press ''OK''.
+You can now choose among installed Execution Environments and press ''Finish''.
 
-[[Image:EePrefAdded.png|center]]
+[[Image:SelectEE0.9.png|center]]
 
 It is now linked to selected project.
 
@@ -281,19 +285,20 @@ It is now linked to selected project.
 
 == Managing Interpreters ==
 
-Interpreters are used by ''Koneki LDT'' to run scripts on the local computers, see [[#Interpreters|Interpreters]].
+Interpreters are used by ''Koneki LDT'' to run scripts on local computers, see [[#Interpreters|Interpreters]].
 
 === Embedded Interpreters ===
 
-An embedded interpreter is an interpreter delivered with ''Koneki LDT''. You can recognize the interpreter preference page, the location is ''(embedded)''.
-Currently, ''Koneki LDT'' is delivered with the JNLua embedded interpreter, JNLua is Java binding of Lua interpreter and APIs.
+An embedded interpreter is an interpreter shipped with ''Koneki LDT''.
+You can recognize them on the interpreter preference page, their location is mentioned as ''(embedded)''.
+Currently, ''Koneki LDT'' is shipped with the JNLua (Lua 5.1) embedded interpreter, JNLua is Java binding of Lua interpreter and APIs.
 
 === Local Interpreters ===
 
-To run Lua scripts in ''Koneki LDT'' using the Lua Local Application launch configuration with an locally installed Lua interpreter, you have to configure a local interpreter. To support debug, the interpreter have to support ''-e'' option and have ''luasocket'' in the path.
+To run Lua scripts in ''Koneki LDT'' using the Lua Local Application launch configuration with a locally installed Lua interpreter, you have to configure a local interpreter. To support debug, the interpreter have to support ''-e'' option and have ''luasocket'' in the path.
 
 To configure an interpreter you just need the path of the interpreter executable, then you can set interpreter
-arguments and set some environment variables.
+arguments and some environment variables.
 
 See below how to reference a Lua interpreter installed on your machine, and use it in ''Koneki LDT''.
 
@@ -303,8 +308,8 @@ To open the Interpreters preference page go to
 
 Then, press the ''Add...'' button to configure a new interpreter and fill in the fields as described here:
 * Leave the ''Interpreter type'' as ''Generic Lua''.
-* You can browse your file system and locate your interpreter executable, or if the executable is in your PATH environment variable, just type its name here (e.g. <code>lua</code>),
-* Give a name to the interpreter (this is mandatory),
+* You can browse your file system and locate your interpreter executable, or if the executable is in your PATH environment variable, just type its name here (e.g. <code>lua</code>).
+* Give a name to the interpreter (this is mandatory).
 * Add extra interpreter's arguments if needed, the same way you would on a regular command line.
 * Set environment variables for this interpreter. You can modify existing variables, or create new ones. Environment variables can be exported and imported using properties files.
 
@@ -343,18 +348,17 @@ In the ''Common'' tab, you can set some settings related to launch configuration
 
 === Attach session ===
 
-The Debugger of Lua Development Tools is based on the DBGp protocol, and the IDE implements a DBGp server.<br> To connect to this server, and begin remote/attach debugging, you need to use a DBGp Lua client.
+The Debugger of Lua Development Tools is based on the DBGp protocol, and the IDE implements a DBGp server.<br> To connect to this server, and start remote/attach debugging, you need to use a DBGp Lua client.
 
 ==== Launching DBGp Client  ====
 
-The DBGp Lua client is a Lua file and can be downloaded through the '''Lua Attach to Application''' launch configuration UI.<br>
+The DBGp Lua client is a Lua file which can be downloaded through the '''Lua Attach to Application''' launch configuration UI.<br>
 
 [[Image:DownloadDebuggerClient0.9.png|center]]
 
 It runs on Unix-like OS and Windows (XP and later). It is written in '''Lua''' and '''depends on lua-socket'''.<br>
-''You can get Lua on http://www.lua.org/download.html and install lua-socket thanks to [http://luarocks.org/en/Download luarocks], or via your official OS repositories.''<br>
-''If for some reasons you can not use lua-socket, you could implement your own transport interface based on your own library (see the interface and the transport parameter)''<br>
-TODO add a link to abstract layer 
+''You can get Lua at http://www.lua.org/download.html and install lua-socket thanks to [http://luarocks.org/en/Download luarocks], or via your official OS repositories.''<br>
+''If, for some reasons, you cannot use lua-socket, you could implement your own transport interface based on your own library (see the [http://git.eclipse.org/c/koneki/org.eclipse.koneki.ldt.git/tree/libraries/luadbgpclient/debugger/transport/fake.lua interface] and the [[#transport_parameter|transport parameter]])''<br>
 
 To use it, you must have the <tt>debugger.lua</tt> file in your Lua path.<br>
 To begin the connection, you must execute this Lua code : 
@@ -368,36 +372,36 @@ which can be shortened like this:
 
 *'''idehost''': the host name or the IP address of the DBGp server (thus, of your IDE). 
 **if <tt>idehost</tt> is <tt>nil</tt>, the <tt>DBGP_IDEHOST</tt> environment variable is used. 
-**if the environment variable is <tt>nil</tt>, the default value '127.0.0.1' is used. 
+***if the environment variable is <tt>nil</tt>, the default value '127.0.0.1' is used. 
 *'''ideport''': the port of the DBGp server (must be configured in the IDE). 
 **if <tt>ideport</tt> is nil, the <tt>DBGP_IDEPORT</tt> environment variable is used. 
-**if the environment variable is <tt>nil</tt>, the default value '10000' is used. 
+***if the environment variable is <tt>nil</tt>, the default value '10000' is used. 
 *'''idekey''': a string which is used as session key (must be configured in the IDE). 
 **if <tt>idekey</tt> is <tt>nil</tt>, the <tt>DBGP_IDEKEY</tt> environment variable is used. 
-**if the environment variable is <tt>nil</tt>, the default value '<tt>luaidekey</tt>' is used.
+***if the environment variable is <tt>nil</tt>, the default value '<tt>luaidekey</tt>' is used.
 Advanced optional parameters :
-*'''transport''': the module name of which implement the transport interface used to do the connection with the server.
-** by default the debugger use an  internal implementation based on luasocket, but if can not use it, you could implement or use another transport layer implementation.
-** if <tt>transport</tt> is <tt>nil</tt>, the DBGP_TRANSPORT env var is used.
-** if the env var is <tt>nil</tt>, the default value '<tt>debugger.transport.luasocket</tt>' is used : this is the default implementation based on luasocket.
+*<span id="transport_parameter">'''transport'''</span>: the name of the module which implements the transport interface used to communicate with the server.
+** by default the debugger use an  internal implementation based on luasocket, but if you cannot use it, you can implement or use another transport layer implementation.
+** if <tt>transport</tt> is <tt>nil</tt>, the <tt>DBGP_TRANSPORT</tt> environment variable is used.
+*** if the environment variable is <tt>nil</tt>, the default value '<tt>debugger.transport.luasocket</tt>' is used : this is the default implementation based on luasocket.
 *'''platform''': 'unix' or 'win32' string which define the kind of platform on which the program to debug is executed.
-** by default the debugger will try to guess it and surely success, if for some reasons it fails you could help it by precise the execution platform.
-** if <tt>platform</tt> is nil, the DBGP_PLATFORM env var is used.
-** if the env var is nil, the debugger will try to guess it.
+** by default the debugger will try to guess it and often succeed. If for some reason it fails, you can help it by precising the execution platform.
+** if <tt>platform</tt> is <tt>nil</tt>, the <tt>DBGP_PLATFORM</tt> environment variable is used.
+*** if the environment variable is <tt>nil</tt>, the debugger will try to guess it.
 *'''workingdir''': the working directory in which the program to debug is executed.
-** by default the debugger will try to guess it and surely success, if for some reasons it fails you could help it by precise the working directory. 
-** if <tt>workingdir</tt> is nil, the DBGP_WORKINGDIR env var is used.
-** if the env var is nil, the debugger will try to guess it
+** by default the debugger will try to guess it and often succeed. If for some reason it fails, you can help it by precising the working directory.
+** if <tt>workingdir</tt> is <tt>nil</tt>, the <tt>DBGP_WORKINGDIR</tt> environment variable is used.
+*** if the environment variable is <tt>nil</tt>, the debugger will try to guess it.
 
 So, to debug any Lua script, you can do: 
 
- lua -e "require('debugger')("idehost","ideport");" MyApp.lua
+ lua -e "require('debugger')('idehost', 'ideport');" MyApp.lua
 
 or even just go with:
 
  lua -e "require('debugger')();" MyApp.lua
 
-if you want to rely on default values for the debug host and port (which should be 127.0.0.1:10000 if you didn't tweak any <tt>DBGP_*</tt> environment variable).
+If you want to rely on default values for the debug host and port (which should be 127.0.0.1:10000 if you didn't tweak any <tt>DBGP_*</tt> environment variable).
 
 {{tip|console output| Some console output problems could happen because of buffer configuration. To force the stdout buffer to be flush at each call of print your should add this <tt>line io.stdout:setvbuf("line");</tt>
 The full line should look like that :
@@ -412,11 +416,11 @@ Go in '''Run/Debug Configurations...'''.
 
 [[Image:LuaAttachToApplication0.9.png|center]]
 
-*'''Project''': Set the ''Koneki LDT'' project in your workspace which includes the Lua source file(s) of the application you want to debug. <br> 
-*'''IdeKey''': Default value is <tt>luaidekey</tt>, if you need to debug more than one application at the same time, you should change it to associate a launch configuration with only one application to debug.<br> 
-*'''Source Mapping''': Define a common way for DBGp Server (IDE) and DBGp Client (running application) to identify source file. There are several strategy, each more or less adapted to a specific used case. To better understand it, see the [[#Source Mapping |advanced documentation]] on it. 
+*'''Project''': select the ''Koneki LDT'' project in your workspace which includes the Lua source file(s) of the application you want to debug.
+*'''IdeKey''': default value is <tt>luaidekey</tt>, if you need to debug more than one application at the same time, you should change it to associate a launch configuration with only one application to debug.
+*'''Source Mapping''': Define a common way for DBGp Server (IDE) and DBGp Client (running application) to identify source file. There are several strategy, each one is more or less adapted to a specific use case. For better understanding, read the [[#Source Mapping |advanced documentation]] about it. 
 
-Now you can start your debug session by clicking '''Debug'''. IDE will wait for an incoming connection from the debugger client, on the port you can see in the debug view. By default the port used is 10000, but if it is taken, another one may be used.<br> 
+Now you can start your debug session by clicking '''Debug'''. IDE will wait for an incoming connection from the debugger client, on the port you can see in the debug view. By default, the port used is 10000, but if it is taken, another one may be used.<br> 
 
 [[Image:LuaAttachToApplicationDebugView0.9.png|center]] 
 
@@ -426,13 +430,13 @@ If needed, you can change the server port, in ''Window > Preferences > Dynamic L
 
 === Remote session ===
 
-As the remote debugging is an advanced feature not require to most of the Lua developments, the remote debbugging not delivred with 
-''Koneki LDT'' and have to be downloaded and installed on top of ''Koneki LDT''.
-To install the ''Koneki LDT'' remote feature, first select the top menu ''Help/Install New Software...''
+As the remote debugging is an advanced feature and is not required by most Lua developers. The remote debugging is not shipped with 
+''Koneki LDT'' and have to be downloaded and installed afterwards.
+To install the ''Koneki LDT'' remote feature, first select the top menu ''Help / Install New Software...''
 
 [[Image:InstallSoftware.png|center]]
 
-On the ''Koneki LDT'' update site select the remote feature in the list and install it. (see [[http://wiki.eclipse.org/Koneki/updatesites|Eclipse documentation about update site]])
+On the ''Koneki LDT'' update site select the remote feature in the list and install it. (see [http://wiki.eclipse.org/Koneki/updatesites Koneki update sites documentation])
 
 [[Image:remoteFeature.png|center]]
 
@@ -440,11 +444,11 @@ In the Remote System Explorer perspective, in the new wizard, create a new ''Con
 
 [[Image:createConnexion.png|center]]
 
-On the next page, enter the network name of your remote system, or directly the IP address.
+On the next page, enter the network name of your remote system, or directly its IP address.
 
 [[Image:createConnexionEnterIP.png|center]]
 
-If needed, configure runtime paths in ssh-lua sub-system advanced properties, if paths are not configured, the remote sytems's environment variables will be used. To change the properties, select the ssh lua node of your connection, then in the property view bellow push the ''show advanced properties'' button. You can edit properties values by selecting the appropriate cell. If you let some properties empty, the remote system lua default will be used. 
+If needed, configure runtime paths in ssh-lua sub-system advanced properties. If paths are not configured, the remote sytems's environment variables will be used. To change the properties, select the ssh lua node of your connection. Then, in the property view bellow push the ''show advanced properties'' button. You can edit properties values by selecting the appropriate cell. If you let some properties empty, the remote system Lua defaults will be used. 
 {{Warning|User environment variable limitation|''Koneki LDT'' is not able to retrieve environement variables specified in the user scope. For exemple, if the variable LUA_PATH is modified in the .profile or .bashrc files of the remote user, on runtime theses modifications may not be taken into account.}}
 
 [[Image:remoteConnection.png|center]]
@@ -453,30 +457,29 @@ In the top menu, select ''Run/Debug Configuration...''.
 
 [[Image:DebugConfiguration.png|center]]
 
-Then, create a Remote Lua Application launch configuration.
-Configure the project and the script to run, select also the remote system.
+Then, create a ''Remote Lua Application'' launch configuration.
+Configure the project and the script to run, also select the remote system.
 
 [[Image:RemoteLaunchConf.png|center]]
 
-Following tab are also provided to configure your launch configuration:
+The following tabs are also provided to configure your launch configuration:
 *''Arguments'': you can here specify script and remote interpreter arguments, type the arguments as you would in command line. At the bottom of the tab, you can also edit the location where Lua files will be copied on the remote system, an absolute path is mandatory.
 *''Environment'': Specify here some environement variables for runtime. Theses variables will be added to remote system's existing environement variables. As explained above, ''Koneki LDT'' is not able to retrieve environement variables values specfied in the user scope.
 *''Common'': Some common launch configuration related settings.
 **Save current launch configuration in a specified file.
-**See in favorite menu the launch conf is displayed.
+**See current launch configuration displayed in favorite menu.
 **Change the encoding of the launch configuration file.
 **Allocates standard input/output in a console and/or redirects standard output in a file.
 
-Launch the debug session, see how [Debugging a Lua program] to continue.
-
+Launch the debug session, see how [[#Debugging_a_Lua_program|Debugging a Lua program]] to continue.
 
 == Debugging a Lua program  ==
 
-See how to launch debug in previous section called ''[[Configuring debug sessions]]''.
+See how to launch debug in previous section called ''[[#Configuring_debug_sessions|Configuring debug sessions]]''.
 
 === Breakpoints, code navigation  ===
 
-You can set breakpoints at a particular file/line, you can do it with the regular double-click on margin: 
+You can set breakpoints at a particular file or line, you can do it with the regular double-click on margin: 
 
 [[Image:Dbg-setbreakpoint.png|center]] 
 
@@ -496,17 +499,17 @@ Once a breakpoint has been hit, and the execution has actually stopped, you can 
 
 === Environment inspection  ===
 
-When a breakpoint is reached, you can see any variable visible from any stack frame (local, upvalue and global variables). You can also change values to another.
+When a breakpoint is reached, you can see any variable visible from any stack frame (local, upvalue and global variables). You can also edit values.
 
 [[Image:Dbg-variables.png|center]] 
 
-{{Tip|New values are expressions|When you set a new value, it is evaluated as an expression, so <tt>math.sqrt</tt> will be evaluated to a function, if you want to put a literal string, use Lua syntax: <tt>"math.sqrt"</tt>. In particular you can change an entire table by another table expression. This is sometimes powerful and sometimes dangerous, be careful with that.}} 
+{{Tip|New values are expressions|When you set a new value, it is evaluated as an expression, so <tt>math.sqrt</tt> will be evaluated to a function, if you want to put a literal string, use Lua syntax: <tt>"math.sqrt"</tt>. In particular you can change an entire table by another table expression. This is sometimes powerful and sometimes dangerous, '''be careful'''.}} 
 
-Some ''special'' values can also be displayed such as metatables or function environments (if it is different from global environment). You can also change these values.
+Some ''special'' values can also be displayed such as metatables or function environments (if it is different from global environment). You can also edit them.
 
 === Interactive console and expressions  ===
 
-In addition to variable view, you have two other useful tools to evaluate some code snippets: expressions view and interactive console.
+In addition to variable view, you have two other useful tools to evaluate some code snippets: ''expressions view'' and ''interactive console''.
 
 [[Image:Dbg-expressions.png|frame|center|The expressions view allows you to re-evaluate complex expressions at each step]] 
 
@@ -518,27 +521,4 @@ In addition to variable view, you have two other useful tools to evaluate some c
 
 The '''dynamic code''' is not supported, it means that any code that is loaded with <tt>load</tt>, <tt>loadstring</tt> will not be supported. The debugger will step over it just like a C function. 
 
-The debugger is officially supported for Lua VM 5.1. Any other implementation (Lua 5.2, LuaJIT, ...) is not guaranteed to work at this time.
-.
-
-[[Image:Dbg-variables.png|center]] 
-
-{{Tip|New values are expressions|When you set a new value, it is evaluated as an expression, so <tt>math.sqrt</tt> will be evaluated to a function, if you want to put a literal string, use Lua syntax: <tt>"math.sqrt"</tt>. In particular you can change an entire table by another table expression. This is sometimes powerful and sometimes dangerous, be careful with that.}} 
-
-Some ''special'' values can also be displayed such as metatables or function environments (if it is different from global environment). You can also change these values.
-
-=== Interactive console and expressions  ===
-
-In addition to variable view, you have two other useful tools to evaluate some code snippets: expressions view and interactive console.
-
-[[Image:Dbg-expressions.png|frame|center|The expressions view allows you to re-evaluate complex expressions at each step]] 
-
-[[Image:Dbg-repl.png|frame|center|The interactive console allows you to type statements under the local scope]] 
-
-{{Warning|Always on top level|Due to a limitation in the DBGp protocol, the interactive console and expressions are always mapped to the top stack frame}}
-
-=== Unsupported features  ===
-
-The '''dynamic code''' is not supported, it means that any code that is loaded with <tt>load</tt>, <tt>loadstring</tt> will not be supported. The debugger will step over it just like a C function. 
-
-The debugger is officially supported for Lua VM 5.1. Any other implementation (Lua 5.2, LuaJIT, ...) is not guaranteed to work at this time.
+The debugger is officially supported for Lua VM 5.1. Any other implementation (Lua 5.2, LuaJIT, ...) is not guaranteed to work as I am writing.
