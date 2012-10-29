@@ -3,17 +3,17 @@
 The ''Koneki LDT'' project provides plug-ins that implement a Lua IDE supporting the
 development of Lua scripts and applications.
 It adds a dedicated Lua perspective to the Eclipse Workbench, which, together
-with features such as syntax highlighting, scope-aware code completion, code
-folding, etc. allows to structure Lua application better (project-based
-organization), and boosts the productivity of Lua developers.
+with features such as ''syntax highlighting'', ''scope-aware code completion'',
+''code folding'', etc. which allows to structure Lua application better
+(project-based organization), and boosts the productivity of Lua developers.
 
 =Getting started=
 
 ==Create a project==
 
 For your code to be manipulated correctly by Lua Development Tools, it must be
-contained into an Eclipse project having a ''Lua'' flavour. In order to do this,
-you have to create a Lua Project, it will add '''Lua nature''' to your code.
+contained into an Eclipse project having a ''Lua'' flavor. In order to do this,
+you have to create a Lua Project, which will add '''Lua nature''' to your code.
 
 In ''File > New > Lua Project'', enter a valid name and voila!
 
@@ -23,7 +23,7 @@ In ''File > New > Lua Project'', enter a valid name and voila!
 
 Now that your project is created, you are ready to start working on your Lua
 scripts. In every project, there is a default '''source folder''', named
-''src''. You can edit the ''main.lua'' file in it, notice that completion is
+''src/''. You can edit the ''main.lua'' file in it, notice that completion is
 already available for Lua built in functions.
 
 [[Image:EditingFile0.9.png|center]]
@@ -31,8 +31,8 @@ already available for Lua built in functions.
 ==Run a Lua script==
 
 To run your Lua script, the file has to be contained in a Lua project.
-If it is the case, you can simply right click on the file add select
-''Run As/Lua Application''.
+If it is the case, you can simply right click on the file and select
+''Run As > Lua Application''.
 
 [[Image:RunAs0.9.png|center]]
 [[Image:Console0.9.png|center]]
@@ -43,7 +43,7 @@ The ''Run As'' menu creates a default launch configuration for the selected file
 
 ==Debug a Lua script==
 
-Simply define a ''breakpoint'' by right clicking (or double clicking) in the first column at the beginning of the line.
+Simply define a ''breakpoint'' by right or double clicking in the first column at the beginning of the line.
 Select your project in favorite debug sessions and your breakpoint should be hit.
 
 [[Image:ToggleBreakpoint0.9.png|center]]
@@ -497,6 +497,29 @@ Once a breakpoint has been hit, and the execution has actually stopped, you can 
 === Environment inspection  ===
 
 When a breakpoint is reached, you can see any variable visible from any stack frame (local, upvalue and global variables). You can also change values to another.
+
+[[Image:Dbg-variables.png|center]] 
+
+{{Tip|New values are expressions|When you set a new value, it is evaluated as an expression, so <tt>math.sqrt</tt> will be evaluated to a function, if you want to put a literal string, use Lua syntax: <tt>"math.sqrt"</tt>. In particular you can change an entire table by another table expression. This is sometimes powerful and sometimes dangerous, be careful with that.}} 
+
+Some ''special'' values can also be displayed such as metatables or function environments (if it is different from global environment). You can also change these values.
+
+=== Interactive console and expressions  ===
+
+In addition to variable view, you have two other useful tools to evaluate some code snippets: expressions view and interactive console.
+
+[[Image:Dbg-expressions.png|frame|center|The expressions view allows you to re-evaluate complex expressions at each step]] 
+
+[[Image:Dbg-repl.png|frame|center|The interactive console allows you to type statements under the local scope]] 
+
+{{Warning|Always on top level|Due to a limitation in the DBGp protocol, the interactive console and expressions are always mapped to the top stack frame}}
+
+=== Unsupported features  ===
+
+The '''dynamic code''' is not supported, it means that any code that is loaded with <tt>load</tt>, <tt>loadstring</tt> will not be supported. The debugger will step over it just like a C function. 
+
+The debugger is officially supported for Lua VM 5.1. Any other implementation (Lua 5.2, LuaJIT, ...) is not guaranteed to work at this time.
+.
 
 [[Image:Dbg-variables.png|center]] 
 
